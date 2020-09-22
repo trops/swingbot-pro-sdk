@@ -1,0 +1,19 @@
+{
+  "name": "swingbot-pro-sdk",
+  "version": "1.0.0",
+  "description": "The Swingbot Pro SDK allows you access to the SwingbotPro API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "SwingbotPro",
+    "SDK"
+  ],
+  "author": "John P. Giatropoulos",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
