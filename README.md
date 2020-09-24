@@ -21,7 +21,7 @@ Initialize the client object
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const swingbotProSDK = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY, SECRET);
 ```
 
 ### login
@@ -30,8 +30,8 @@ Login a user.
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const swingbotProSDK = SwingbotProSDK.init(API_KEY, SECRET);
-swingbotProSDK.login(email, password)
+const client = SwingbotProSDK.init(API_KEY, SECRET);
+client.login(email, password)
     .then(results => {
         // do something
     }).catch(e => {
@@ -41,13 +41,29 @@ swingbotProSDK.login(email, password)
 
 ### uploadVideo
 
+Upload a video to Swingbot Pro for processing.
+Include the file to upload, the email of the user this file belongs to, and the id of the lesson program from the dashboard.
+
+```javascript
+const SwingbotProSDK = require('swingbot-pro-sdk');
+const client = SwingbotProSDK.init(API_KEY, SECRET);
+
+client.uploadVideo(file, email, lessonProgramId)
+    .then(uploadResults => {
+        // do stuff here!
+    })
+    .catch(e => {
+        // handle the error
+    });
+```
+
 ### getAnalysisById
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const swingbotProSDK = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY, SECRET);
 
-swingbotProSDK.getAnalysisById(analysisId)
+client.getAnalysisById(analysisId)
     .then(analysisResults => {
         // do stuff here!
     })
@@ -60,9 +76,9 @@ swingbotProSDK.getAnalysisById(analysisId)
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const swingbotProSDK = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY, SECRET);
 
-swingbotProSDK.getVideosByUserId(userId)
+client.getVideosByUserId(userId)
     .then(videos => {
         // do stuff here!
     })
@@ -75,9 +91,9 @@ swingbotProSDK.getVideosByUserId(userId)
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const swingbotProSDK = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY, SECRET);
 
-swingbotProSDK.getWebsiteConfig()
+client.getWebsiteConfig()
     .then(websiteConfig => {
         // do stuff here!
     })
