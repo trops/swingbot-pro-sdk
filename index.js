@@ -1,7 +1,6 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
-
-const apiUrl = 'https://rth7ytu7ak.execute-api.us-east-1.amazonaws.com/dev';
+const apiUrl = 'https://api.swingbotpro.com';
 
 function SwingbotProSDK() {};
 
@@ -24,7 +23,6 @@ function generateToken(apiKey, secret) {
 function handleError(e) {
   console.log(e.message);
   if ('response' in e) {
-    console.log(e.message);
     return Promise.reject({
       response: e.response,
       message: 'Make sure your API key is valid'
@@ -103,10 +101,51 @@ SwingbotProSDK.uploadVideo = (file, email, lessonProgramId) => {
     .then(uploadResult => processVideoFile(
       file.name, 
       email, 
-      processType, 
       lessonProgramId
     )).catch(err => err);
 };
+
+
+/**
+ * getSignedUrl
+ * @param {string} fileName filename to be uploaded
+ */
+SwingbotProSDK.getUploadUrl = (fileName) => {
+  return getSignedUrl(fileName)
+    .then(urlResults => urlResults.data.url)
+    .catch(err => err);
+};
+
+/**
+ * uploadVideoWithUrl
+ * @param {string} url url we received from amazon
+ * @param {binary} file the file to be uploaded
+ * @param {string} email the email of the user who uploaded the video
+ * @param {int} lessonProgramId the lesson program id
+ */
+SwingbotProSDK.uploadVideoWithUrl = (url, file) => {
+  return uploadVideoFile(url, file)
+    .then(uploadResult => uploadResult)
+    .catch(err => err);
+};
+
+/**
+ * processVideoFile
+ * Process the video file
+ * @param {string} fileName the filename to process
+ * @param {string} email the email of the owner
+ * @param {int} lessonProgramId the lesson program id
+ */
+SwingbotProSDK.processVideoFile = (fileName, email, lessonProgramId) => {
+  return processVideoFile(
+    fileName, 
+    email, 
+    lessonProgramId
+  )
+    .then(processVideoResult => processVideoResult)
+    .catch(e => e);
+};
+
 /**
  * getAnalysisById
  * Get the Lesson Results by id

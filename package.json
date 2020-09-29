@@ -1,6 +1,6 @@
 {
   "name": "swingbot-pro-sdk",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "The Swingbot Pro SDK allows you access to the SwingbotPro API.",
   "main": "index.js",
   "scripts": {
