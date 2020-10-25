@@ -9,7 +9,9 @@ function SwingbotProSDK() {};
  * 
  * @param {*} apiKey the API Key
  * @param {*} secret the secret
- * @private
+ * @example
+ * // generate a new token
+ * const token = generateToken('12345', 'secret');
  */
 function generateToken(apiKey, secret) {
     let token = jwt.sign({
@@ -21,7 +23,7 @@ function generateToken(apiKey, secret) {
 };
 
 function handleError(e) {
-  console.log(e.message);
+  console.log('error: ', e.message);
   if ('response' in e) {
     return Promise.reject({
       response: e.response,
@@ -81,6 +83,25 @@ SwingbotProSDK.login = (email, password) => {
       password
     },
     url: `${apiUrl}/account/login`,
+    headers: { 'Authorization': `${SwingbotProSDK.apiKey}` }
+  })
+    .then(data => data !== undefined ? data : Promise.reject(new Error('Unable to get analysis results')))
+    .catch(err => handleError(err));
+};
+/**
+ * register
+ * Register a new user account
+ * @param {string} email the user's email address
+ * @param {string} password the user's password
+ */
+SwingbotProSDK.register = (email, password) => {
+  return axios({
+    method: 'post',
+    data: {
+      email,
+      password
+    },
+    url: `${apiUrl}/account/register`,
     headers: { 'Authorization': `${SwingbotProSDK.apiKey}` }
   })
     .then(data => data !== undefined ? data : Promise.reject(new Error('Unable to get analysis results')))
@@ -185,6 +206,15 @@ SwingbotProSDK.getWebsiteConfig = function() {
     }).catch(err => handleError(err));
 };
 
+SwingbotProSDK.getLessonPrograms = function() {
+  return axios.get(`${apiUrl}/programs`, {
+    headers: { 'Authorization': SwingbotProSDK.apiKey }
+  })
+    .then(lessonPrograms => {
+      return lessonPrograms !== undefined ?
+        lessonPrograms : Promise.reject(new Error('Unable to get web config'));
+    }).catch(err => handleError(err));
+};
 /**
  * init
  * Initialize the SwingbotPro SDK
