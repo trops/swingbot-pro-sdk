@@ -1,12 +1,13 @@
-const axios = require('axios');
-const jwt = require('jsonwebtoken');
+import axios from 'axios';
+import jwt from 'jsonwebtoken';
+
 const apiUrl = 'https://api.swingbotpro.com';
 
-function SwingbotProSDK() {};
+const SwingbotProSDK = {};
 
 /**
  * generateToken
- * 
+ *
  * @param {*} apiKey the API Key
  * @param {*} secret the secret
  * @example
@@ -14,12 +15,12 @@ function SwingbotProSDK() {};
  * const token = generateToken('12345', 'secret');
  */
 function generateToken(apiKey, secret) {
-    let token = jwt.sign({
-        exp: Math.floor(Date.now() / 1000) + (60 * 60),
-        data: apiKey
-    }, secret);
+  let token = jwt.sign({
+    exp: Math.floor(Date.now() / 1000) + (60 * 60),
+    data: apiKey
+  }, secret);
 
-    return token;
+  return token;
 };
 
 function handleError(e) {
@@ -36,7 +37,7 @@ function handleError(e) {
 //
 // Step 1: Get the signed URL to upload the video
 //
-function getSignedUrl (filename) {
+function getSignedUrl(filename) {
   return axios.get(`${apiUrl}/upload?filename=${filename}`, {
     headers: { 'Authorization': SwingbotProSDK.apiKey }
   })
@@ -56,10 +57,10 @@ function uploadVideoFile(uploadUrl, file) {
     .catch(err => handleError(err));
 };
 
-  //
-  // Step 3: Submit for processing
-  //
-function processVideoFile(filename, email, lessonProgramId) {
+//
+// Step 3: Submit for processing
+//
+function processFile(filename, email, lessonProgramId) {
   const body = { filename, email, processType: 'analyze', lessonProgramId };
 
   return axios({
@@ -75,7 +76,7 @@ function processVideoFile(filename, email, lessonProgramId) {
 /**
  * login
  */
-SwingbotProSDK.login = (email, password) => {
+export function login(email, password) {
   return axios({
     method: 'post',
     data: {
@@ -94,7 +95,7 @@ SwingbotProSDK.login = (email, password) => {
  * @param {string} email the user's email address
  * @param {string} password the user's password
  */
-SwingbotProSDK.register = (email, password) => {
+export function register(email, password) {
   return axios({
     method: 'post',
     data: {
@@ -116,22 +117,21 @@ SwingbotProSDK.register = (email, password) => {
  * @param {int} lessonProgramId the id for the lesson program in the dashboard
  * @param {string} apiKey your API Key from the dashboard
  */
-SwingbotProSDK.uploadVideo = (file, email, lessonProgramId) => {
+export function uploadVideo(file, email, lessonProgramId) {
   return getSignedUrl(file.name)
     .then(urlResults => uploadVideoFile(urlResults.data.url, file))
-    .then(uploadResult => processVideoFile(
-      file.name, 
-      email, 
+    .then(uploadResult => processFile(
+      file.name,
+      email,
       lessonProgramId
     )).catch(err => err);
 };
-
 
 /**
  * getSignedUrl
  * @param {string} fileName filename to be uploaded
  */
-SwingbotProSDK.getUploadUrl = (fileName) => {
+export function getUploadUrl(fileName) {
   return getSignedUrl(fileName)
     .then(urlResults => urlResults.data.url)
     .catch(err => err);
@@ -144,7 +144,7 @@ SwingbotProSDK.getUploadUrl = (fileName) => {
  * @param {string} email the email of the user who uploaded the video
  * @param {int} lessonProgramId the lesson program id
  */
-SwingbotProSDK.uploadVideoWithUrl = (url, file) => {
+export function uploadVideoWithUrl(url, file) {
   return uploadVideoFile(url, file)
     .then(uploadResult => uploadResult)
     .catch(err => err);
@@ -157,10 +157,10 @@ SwingbotProSDK.uploadVideoWithUrl = (url, file) => {
  * @param {string} email the email of the owner
  * @param {int} lessonProgramId the lesson program id
  */
-SwingbotProSDK.processVideoFile = (fileName, email, lessonProgramId) => {
-  return processVideoFile(
-    fileName, 
-    email, 
+export function processVideoFile(fileName, email, lessonProgramId) {
+  return processFile(
+    fileName,
+    email,
     lessonProgramId
   )
     .then(processVideoResult => processVideoResult)
@@ -172,7 +172,7 @@ SwingbotProSDK.processVideoFile = (fileName, email, lessonProgramId) => {
  * Get the Lesson Results by id
  * @param {int} id the lesson id
  */
-SwingbotProSDK.getAnalysisById = (id) => {
+export function getAnalysisById(id) {
   return axios.get(`${apiUrl}/analysis/${id}`, {
     headers: { 'Authorization': `${SwingbotProSDK.apiKey}` }
   })
@@ -186,7 +186,7 @@ SwingbotProSDK.getAnalysisById = (id) => {
  * Fetch all of the videos for the golfer
  * @param {int} userId the user id of the golfer
  */
-SwingbotProSDK.getVideosByUserId = (userId) => {
+export function getVideosByUserId(userId) {
   return axios.get(`${apiUrl}/users/${userId}/videos`, {
     headers: { 'Authorization': SwingbotProSDK.apiKey }
   })
@@ -196,7 +196,7 @@ SwingbotProSDK.getVideosByUserId = (userId) => {
     }).catch(err => handleError(err));
 };
 
-SwingbotProSDK.getWebsiteConfig = function() {
+export function getWebsiteConfig() {
   return axios.get(`${apiUrl}/website`, {
     headers: { 'Authorization': SwingbotProSDK.apiKey }
   })
@@ -206,7 +206,7 @@ SwingbotProSDK.getWebsiteConfig = function() {
     }).catch(err => handleError(err));
 };
 
-SwingbotProSDK.getLessonPrograms = function() {
+export function getLessonPrograms() {
   return axios.get(`${apiUrl}/programs`, {
     headers: { 'Authorization': SwingbotProSDK.apiKey }
   })
@@ -221,12 +221,12 @@ SwingbotProSDK.getLessonPrograms = function() {
  * @param {string} apiKey your API Key from the dashboard
  * @param {*} secret your Secret from the dashboard
  */
-SwingbotProSDK.init = function (apiKey, secret) {
+export function init(apiKey, secret) {
   // let's set the token for the rest of the app
-  this.authorization = generateToken(apiKey, secret);
-  this.apiKey = apiKey;
+  SwingbotProSDK.authorization = generateToken(apiKey, secret);
+  SwingbotProSDK.apiKey = apiKey;
 
   return this;
 };
 
-module.exports = SwingbotProSDK;
+// module.exports = SwingbotProSDK;
