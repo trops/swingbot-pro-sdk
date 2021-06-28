@@ -21,7 +21,7 @@ Initialize the client object
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const client = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY);
 ```
 
 ### login
@@ -30,7 +30,7 @@ Login a user.
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const client = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY);
 client.login(email, password)
     .then(results => {
         // do something
@@ -46,7 +46,7 @@ Include the file to upload, the email of the user this file belongs to, and the 
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const client = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY);
 
 client.uploadVideo(file, email, lessonProgramId)
     .then(uploadResults => {
@@ -61,7 +61,7 @@ client.uploadVideo(file, email, lessonProgramId)
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const client = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY);
 
 client.getAnalysisById(analysisId)
     .then(analysisResults => {
@@ -76,7 +76,7 @@ client.getAnalysisById(analysisId)
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const client = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY);
 
 client.getVideosByUserId(userId)
     .then(videos => {
@@ -91,7 +91,7 @@ client.getVideosByUserId(userId)
 
 ```javascript
 const SwingbotProSDK = require('swingbot-pro-sdk');
-const client = SwingbotProSDK.init(API_KEY, SECRET);
+const client = SwingbotProSDK.init(API_KEY);
 
 client.getWebsiteConfig()
     .then(websiteConfig => {

@@ -24,11 +24,10 @@ function generateToken(apiKey, secret) {
 };
 
 function handleError(e) {
-  console.log('error: ', e.message);
   if ('response' in e) {
     return Promise.reject({
       response: e.response,
-      message: 'Make sure your API key is valid'
+      message: e.message
     });
   }
   return Promise.reject(e);
@@ -105,7 +104,7 @@ export function register(email, password) {
     url: `${apiUrl}/account/register`,
     headers: { 'Authorization': `${SwingbotProSDK.apiKey}` }
   })
-    .then(data => data !== undefined ? data : Promise.reject(new Error('Unable to get analysis results')))
+    .then(data => data !== undefined ? data : Promise.reject(new Error('Unable to register')))
     .catch(err => handleError(err));
 };
 
@@ -221,7 +220,7 @@ export function getLessonPrograms() {
  * @param {string} apiKey your API Key from the dashboard
  * @param {*} secret your Secret from the dashboard
  */
-export function init(apiKey, secret) {
+export function init(apiKey, secret = 'secret') {
   // let's set the token for the rest of the app
   SwingbotProSDK.authorization = generateToken(apiKey, secret);
   SwingbotProSDK.apiKey = apiKey;
