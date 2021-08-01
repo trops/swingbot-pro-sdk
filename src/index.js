@@ -72,6 +72,19 @@ function processFile(filename, email, lessonProgramId) {
     .catch(err => handleError(err));
 };
 
+function processFileForCredit(filename, licenseeCreditCode) {
+  const body = { filename, licenseeCreditCode };
+
+  return axios({
+    method: 'post',
+    data: body,
+    url: `${apiUrl}/process-credit`,
+    headers: { 'Authorization': SwingbotProSDK.apiKey }
+  })
+    .then(uploadUrl => uploadUrl)
+    .catch(err => handleError(err));
+};
+
 /**
  * login
  */
@@ -127,6 +140,22 @@ export function uploadVideo(file, email, lessonProgramId) {
 };
 
 /**
+ * uploadVideoForCredit
+ * This method will utilize an existing credit to associate with the video upload
+ * @param {object} file the file object uploaded
+ * @param {string} licenseeCreditCode the credit code to be associated with the video upload
+ * @returns {Promise}
+ */
+export function uploadVideoForCredit(file, licenseeCreditCode) {
+  return getSignedUrl(file.name)
+    .then(urlResults => uploadVideoFile(urlResults.data.url, file))
+    .then(uploadResult => processFileForCredit(
+      file.name,
+      licenseeCreditCode
+    )).catch(err => err);
+};
+
+/**
  * getSignedUrl
  * @param {string} fileName filename to be uploaded
  */
@@ -161,6 +190,15 @@ export function processVideoFile(fileName, email, lessonProgramId) {
     fileName,
     email,
     lessonProgramId
+  )
+    .then(processVideoResult => processVideoResult)
+    .catch(e => e);
+};
+
+export function processVideoFileForCredit(fileName, licenseeCreditCode) {
+  return processFileForCredit(
+    fileName,
+    licenseeCreditCode
   )
     .then(processVideoResult => processVideoResult)
     .catch(e => e);
