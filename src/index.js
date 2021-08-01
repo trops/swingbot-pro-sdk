@@ -122,6 +122,26 @@ export function register(email, password) {
 };
 
 /**
+ * createCreditForUser
+ * Assign a credit to a user typically after purchase, but could be anytime
+ * @param {int} userId the user id who is getting the credit
+ * @param {int} licenseeCampaignId the id for the lesson program
+ */
+export function assignCredit(userId, licenseeCampaignId) {
+  return axios({
+    method: 'post',
+    data: {
+      userId,
+      licenseeCampaignId
+    },
+    url: `${apiUrl}/licensee-credit`,
+    headers: { 'Authorization': `${SwingbotProSDK.apiKey}` }
+  })
+    .then(data => data !== undefined ? data : Promise.reject(new Error('Unable to register')))
+    .catch(err => handleError(err));
+};
+
+/**
  * uploadVideo
  * Submit a video to SwingbotPro
  * @param {object} file the video file
