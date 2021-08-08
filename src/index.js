@@ -272,6 +272,16 @@ export function getLessonPrograms() {
         lessonPrograms : Promise.reject(new Error('Unable to get web config'));
     }).catch(err => handleError(err));
 };
+
+export function getCreditsForUser(userId, limit = 50, offset = 0) {
+  return axios.get(`${apiUrl}/users/${userId}/licensee-credit?limit=${limit}&offset=${offset}`, {
+    headers: { 'Authorization': SwingbotProSDK.apiKey }
+  })
+    .then(credits => {
+      return credits !== undefined ?
+        credits : Promise.reject(new Error('Unable to get credits'));
+    }).catch(err => handleError(err));
+};
 /**
  * init
  * Initialize the SwingbotPro SDK
