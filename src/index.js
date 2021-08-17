@@ -122,6 +122,49 @@ export function register(email, password) {
 };
 
 /**
+ * forgotPassword
+ * Get the reset password code and send the email on the licensee's behalf
+ * @param {string} email the email address
+ * @param {string} redirectUrl the url used in the email
+ * @returns Promise
+ */
+export function forgotPassword(email, redirectUrl) {
+  return axios({
+    method: 'post',
+    data: {
+      email,
+      redirectUrl
+    },
+    url: `${apiUrl}/account/forgot-password`,
+    headers: { 'Authorization': `${SwingbotProSDK.apiKey}` }
+  })
+    .then(data => data !== undefined ? data : Promise.reject(new Error('Unable to handle forgot password request')))
+    .catch(err => handleError(err));
+};
+
+/**
+ * resetPassword
+ * Reset the user's password
+ * @param {string} nonce the nonce for the password reset request
+ * @param {string} password the new password
+ * @returns Promise
+ */
+export function resetPassword(nonce, password, confirmPassword) {
+  return axios({
+    method: 'put',
+    data: {
+      nonce,
+      password,
+      confirmPassword
+    },
+    url: `${apiUrl}/account/reset-password`,
+    headers: { 'Authorization': `${SwingbotProSDK.apiKey}` }
+  })
+    .then(data => data !== undefined ? data : Promise.reject(new Error('Unable to handle forgot password request')))
+    .catch(err => handleError(err));
+};
+
+/**
  * createCreditForUser
  * Assign a credit to a user typically after purchase, but could be anytime
  * @param {int} userId the user id who is getting the credit
