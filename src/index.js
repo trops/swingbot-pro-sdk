@@ -170,12 +170,13 @@ export function resetPassword(nonce, password, confirmPassword) {
  * @param {int} userId the user id who is getting the credit
  * @param {int} licenseeCampaignId the id for the lesson program
  */
-export function assignCredit(userId, licenseeCampaignId) {
+export function assignCredit(userId, licenseeCampaignId, email = false) {
   return axios({
     method: 'post',
     data: {
       userId,
-      licenseeCampaignId
+      licenseeCampaignId,
+      sendEmail: email
     },
     url: `${apiUrl}/licensee-credit`,
     headers: { 'Authorization': `${SwingbotProSDK.apiKey}` }
@@ -286,8 +287,8 @@ export function getAnalysisById(id) {
  * Fetch all of the videos for the golfer
  * @param {int} userId the user id of the golfer
  */
-export function getVideosByUserId(userId) {
-  return axios.get(`${apiUrl}/users/${userId}/videos`, {
+export function getVideosByUserId(userId, limit = 50, offset = 0) {
+  return axios.get(`${apiUrl}/users/${userId}/videos?limit=${limit}&offset=${offset}`, {
     headers: { 'Authorization': SwingbotProSDK.apiKey }
   })
     .then(videoResults => {
@@ -325,6 +326,17 @@ export function getCreditsForUser(userId, limit = 50, offset = 0) {
         credits : Promise.reject(new Error('Unable to get credits'));
     }).catch(err => handleError(err));
 };
+
+export function getCreditDetail(creditCode) {
+  return axios.get(`${apiUrl}/licensee-credit/${creditCode}`, {
+    headers: { 'Authorization': SwingbotProSDK.apiKey }
+  })
+    .then(credit => {
+      return credit !== undefined ?
+        credit : Promise.reject(new Error('Unable to get credit detail'));
+    }).catch(err => handleError(err));
+};
+
 /**
  * init
  * Initialize the SwingbotPro SDK
